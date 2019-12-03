@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html  lang="en">
+<head>
+<title>Vuurwerkshop.nl</title>
+
+<link  rel="stylesheet" href="style.css"  type="text/css" />
+
+<script>
+  var internalDNDType = 'Text'; 
+  var dragged; 
+
+  	
+  function dragStartHandler(event) {
+	
+    if (event.target instanceof HTMLLIElement) {
+		
+		
+	   dragged = event.target;
+	
+		var valStr = event.target.textContent+"||"+event.target.getAttribute('data-value'); 
+      
+	  event.dataTransfer.setData(internalDNDType, valStr);
+      event.effectAllowed = 'move'; 
+    } else {
+      event.preventDefault(); 
+    }
+  }
+
+	 function dragEnterHandler(event) {
+
+	    if (event.dataTransfer.types.contains(internalDNDType)){
+	      event.preventDefault();
+		}
+	  }
+	
+	  function dragOverHandler(event) {
+	    event.dataTransfer.dropEffect = 'move';
+	    event.preventDefault();
+	
+	  }
+	
+	  function dropHandler(event) {
+
+		event.preventDefault();
+		var dataV = event.dataTransfer.getData(internalDNDType);
+
+		var det = dataV.split('||');
+
+		var dataValue = det[1];
+		
+		var textValue = det[0];
+		
+		if (document.getElementById(dataValue+"-value"))
+		{
+			
+			var num = document.getElementById(dataValue+"-value").textContent;
+			var newVal = parseInt(num) + 1;
+			document.getElementById(dataValue+"-value").textContent = newVal;
+			
+		} else {
+		
+	  	  var dt = document.createElement('dt');
+		  var dd = document.createElement('dd');
+		    
+	
+			dt.id = dataValue+"-title";
+			dd.id = dataValue+"-value";
+			dt.textContent = textValue;
+			dd.textContent = '1';
+	
+		    document.getElementById('dropzone').appendChild(dt);
+			document.getElementById('dropzone').appendChild(dd);
+			
+		  	dragged.className = 'in';
+		
+		}
+		
+		
+		
+	}
+
+</script>
+<script type="text/javascript">
+    function showmenu(elmnt)
+    {
+    document.getElementById(elmnt).style.visibility="visible";
+    }
+    function hidemenu(elmnt)
+    {
+    document.getElementById(elmnt).style.visibility="hidden";
+    }
+    </script>
+
+</head>
+	<header>
+		<h1>Vuurwerk Scrum</h1>
+            Nummer 1 in Nederland
+            <div class="dropdown">
+                    <button class="dropbtn">Assortiment</button>
+                    <div class="dropdown-content">
+                      <a href="#">Knal Vuurwerk!</a>
+                      <a href="#">Sier Vuurwerk!</a>
+                      <a href="#">Compleet Assortiment</a>
+                    </div>
+                  </div>
+		
+	</header>
+	<section id="content">
+		<ul id="items" ondragstart="dragStartHandler(event)">
+		 <li id="ad1" draggable="false" data-value="50% korting">Korting!!</li>
+		 <li id="ad2" draggable="false" data-value="1 + 1 gratis">1 + 1 GRATIS!!</li>
+    </section>
+	<aside >
+		<h2>Winkelwagen</h2>
+		<dl id="dropzone" class="dropzone floatfix"
+		    ondragenter="dragEnterHandler(event)"
+		    ondragover="dragOverHandler(event)"
+		    ondrop="dropHandler(event)">
+		</dl>
+		<p>Sleep uw Producten in de box</p>
+		<a id="checkout" href="#">Bestellen</a>
+    </aside>
+    
+</body>
+</html>
